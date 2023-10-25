@@ -1,5 +1,4 @@
-flask
-pandas
-numpy
-re
-nltk
+flask==3.0.0
+pandas==1.5.3
+numpy==1.24.2
+nltk==3.8.1

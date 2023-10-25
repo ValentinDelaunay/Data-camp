@@ -1,0 +1,422 @@
+<html>
+<head>
+    <title>Recherche de chansons</title>
+    <style>
+        header {
+            background-color: #333;
+            color: #fff;
+            padding: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-radius: 5px;
+        }
+
+        header button{
+            border-radius: 5px;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        #container {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+        }
+
+        #search_zone{
+            border: 2px solid #000;
+            border-radius: 5px;
+            width: 48%;
+            padding: 10px;
+        }
+        
+        #search_zone img{
+            width: 30px;
+            height: 30px;
+            display: inline-block;
+        }
+
+        #search_zone h1{
+            display: inline-block;
+            padding-right: 7px;
+            padding-bottom: 10px;
+        }
+
+        #display_choice{
+            border: 2px solid #000;
+            border-radius: 5px;
+            width: 48%;
+            padding: 10px;
+            text-align: center;
+            max-height: 123px;
+            overflow: auto;
+        }
+
+        #affichage_choice{
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        #affichage {
+            flex: 1;
+            margin-right: 10px;
+        }
+
+        #affichage h2 {
+            display: inline-block;
+            padding-right: 7px;
+            padding-bottom: 10px;
+        }
+
+        #affichage img {
+            width: 30px;
+            height: 30px;
+            display: inline-block;
+        }
+
+        #affichage2 {
+            flex: 1;
+            text-align: right;
+        }
+
+        #sendSelectedSongs {
+            font-size: 25px;
+            border-radius: 5px;
+        }
+
+        .site-title {
+            margin: 0;
+            font-size: 24px;
+            margin-left: 10px;
+        }
+
+        h1 {
+            margin: 0;
+            font-size: 24px;
+        }
+
+        nav a {
+            color: #fff;
+            text-decoration: none;
+            margin-left: 20px;
+        }
+
+        nav a:hover {
+            text-decoration: underline;
+        }
+
+        #selected_songs_window {
+            display: none;
+            position: fixed;
+            top: 10px;
+            left: 10px;
+            background-color: #fff;
+            padding: 10px;
+            border: 1px solid #333;
+            border-radius: 5px;
+            z-index: 100;
+        }
+
+        #selected_songs_list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        #selected_songs_list li {
+            margin-bottom: 5px;
+        }
+
+        .show-selected-songs #selected_songs_window {
+            display: block;
+        }
+
+        #search_results{
+            border: #000 2px solid;
+            border-radius: 5px;
+            max-width: 100%;
+            max-height: 500px;
+            overflow: auto;
+        }
+
+        #recommendation_div{
+            border: #000 2px solid;
+            border-radius: 5px;
+            max-width: 100%;
+            max-height: 500px;
+            overflow: auto;
+        }
+
+        #recommendation_div h1{
+            display: inline-block;
+            padding-right: 7px;
+            padding-bottom: 10px;
+        }
+
+        #recommendation_div img{
+            padding-top: 10px;
+            width: 30px;
+            height: 30px;
+            display: inline-block;
+        }
+
+        #rate_div{
+            border: #000 2px solid;
+            border-radius: 5px;
+            width: 600px;
+            max-width: 100%;
+            max-height: 500px;
+            overflow: auto;
+            text-align: center;
+            margin: 0 auto;
+        }
+
+        #rate_div img{
+            text-align: center;
+        }
+
+        .form_ textarea{
+            width: 75%;
+            height: 100px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <img src="https://cdn.discordapp.com/attachments/1158776368528633947/1165992301345116160/SpotiFine.png?ex=6548ddf3&is=653668f3&hm=18b24288a46f87826a91f83850aeedb3633cd3cf801bce52d42ab33df0dc76cf&" alt="SpotiFine logo" width="65" height="50" />
+        <h1 class="site-title">Spotifine</h1>
+        <nav>
+            <button onclick="window.location.href='/contact'">Contact us</button>
+        </nav>
+    </header>
+    <br><br>
+    <div id="container">
+        <div id="search_zone">
+            <h1>Select your favorite songs:</h1>
+            <img src="https://cdn-icons-png.flaticon.com/512/9280/9280598.png" alt="musique" />
+            <br>
+            <form action="/search" method="post" id="search_form">
+                <label for="search_term">Search for a song title, artist or album:</label>
+                <input type="text" name="search_term" id="search_term">
+                <input type="submit" value="Search">
+            </form>
+            <br>
+            <button id="sort_popularity_desc">Sort by decreasing popularity</button>
+            <button id="sort_name_asc">Sort by artist name</button>
+            <button id="sort_album_asc">Sort by album name</button>
+        </div>
+        <div id="display_choice">
+            <div id="affichage_choice">
+                <div id="affichage">
+                    <h2>Selected songs:</h2>
+                    <img src="https://cdn-icons-png.flaticon.com/512/2704/2704700.png " alt="confirm" />
+                </div>
+                <div id="affichage">
+                    <button id="sendSelectedSongs">Send !</button>
+                </div>
+            </div>
+            <ul id="selected_songs_list"></ul>
+        </div>
+    </div>
+    <br><br>
+    <div id="search_results" class="hidden">
+        <table>
+            <tr>
+                <th>Select</th>
+                <th>Name</th>
+                <th>Artist</th>
+                <th>Album</th>
+                <th>Popularity</th>
+                <th>Lyrics</th>
+            </tr>
+        </table>
+    </div>
+    <br><br>
+    <div id="recommendation_div" class="hidden">
+        <h1>Here are our recommendations:</h1>
+        <img src="https://cdn-icons-png.flaticon.com/512/2949/2949275.png" alt="musique" />
+        <br>
+        <table>
+            <tr>
+                <th>Name</th>
+                <th>Artist</th>
+                <th>Album</th>
+                <th>Popularity</th>
+                <th>Lyrics</th>
+            </tr>
+        </table>
+    </div>
+    <br><br>
+    <div id="rate_div" class="hidden">
+        <img src="https://cdn.discordapp.com/attachments/831078152804630579/1166132828589805588/rate-hd-photo_5e18ea9d39464.png?ex=654960d4&is=6536ebd4&hm=d1f709522f58f552d1d8a1ef8b257756dfcf5bbb6b38577e9d3da4d08f22d2fb&" alt="stars_image" width="150" height="100"/>
+        <p>We value your feedback! Please take a moment to rate our service.</p>
+        <div class="form_">
+            <form action="send_rating" method="post">
+                <img src="https://cdn.discordapp.com/attachments/831078152804630579/1166132786340573255/happy-star-emoji_78370-179-removebg-preview.png?ex=654960c9&is=6536ebc9&hm=daca47a72a1b00fd6f6186f68a16d45e69c56fe0dfa7b26bdfd6e4cb73045442&" alt=star width="50" height="50">
+                <br>
+                <label for="rating">Rating: </label>
+                <select name="rating" id="rating">
+                    <option value="1">1 star</option>
+                    <option value="2">2 stars</option>
+                    <option value="3">3 stars</option>
+                    <option value="4">4 stars</option>
+                    <option value="5" selected>5 stars</option>
+                </select>
+                <br><br>
+                <label for="comment">Comment:</label>
+                <br>
+                <textarea name="comment" id="comment" cols="30" rows="10"></textarea>
+                <br><br>
+                <input type="submit" value="Submit">
+            </form>
+        </div>
+    </div>    
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            var searchResults = [];
+            var songDetails = {};
+            var selectedSongs = new Set();
+            var selectedSongsDataSet = [];
+            localStorage.clear();
+            var initialSelectedSongs = JSON.parse(localStorage.getItem('selectedSongs')) || [];
+            if (initialSelectedSongs) {
+                selectedSongs = new Set(initialSelectedSongs);
+                updateSelectedSongsList();
+            }
+
+            $('#search_form').submit(function(event) {
+                event.preventDefault();
+                var search_term = $('#search_term').val().toLowerCase();
+                $.post('/search', { search_term: search_term }, function(data) {
+                    searchResults = data;
+                    displayResults(searchResults);
+                    $('#search_results').removeClass('hidden');
+                });
+            });
+
+            $('#sort_popularity_desc').click(function() {
+                searchResults.sort(function(a, b) {
+                    return b.Popularity - a.Popularity;
+                });
+                displayResults(searchResults);
+            });
+
+            $('#sort_name_asc').click(function() {
+                searchResults.sort(function(a, b) {
+                    return a.Artist.localeCompare(b.Artist);
+                });
+                displayResults(searchResults);
+            });
+
+            $('#sort_album_asc').click(function() {
+                searchResults.sort(function(a, b) {
+                    return a.Album.localeCompare(b.Album);
+                });
+                displayResults(searchResults);
+            });
+
+            function displayResults(data) {
+                var resultHtml = '<table>';
+                resultHtml += '<tr><th>Select</th><th>Name</th><th>Artist</th><th>Album</th><th>Popularity</th><th>Lyrics</th></tr>';
+                data.forEach(function(record) {
+                    var songName = record['Name'];
+                    songDetails[songName] = record;
+                    resultHtml += '<tr>';
+                    resultHtml += '<td><input type="checkbox" data-song-name="' + songName + '"></td>';
+                    resultHtml += '<td>' + songName + '</td>';
+                    resultHtml += '<td>' + record['Artist'] + '</td>';
+                    resultHtml += '<td>' + record['Album'] + '</td>';
+                    resultHtml += '<td>' + record['Popularity'] + '</td>';
+                    resultHtml += '<td>' + record['Lyrics'] + '</td>';
+                    resultHtml += '</tr>';
+                    resultHtml += '<tr><td colspan="6"><hr></td></tr>';
+                });
+                resultHtml += '</table>';
+                $('#search_results table').html(resultHtml);
+                updateSelectedSongsList();
+            }
+            $('input[type="checkbox"]').off();
+
+            function updateSelectedSongsList() {
+                var selectedSongsHtml = '';
+                selectedSongsDataSet = Array.from(selectedSongs).map(function(songName) {
+                    var song = songDetails[songName];
+                    return {
+                        Name: songName,
+                        Artist: song.Artist,
+                        Album: song.Album,
+                        Popularity: song.Popularity
+                    };
+                });
+
+                for (var songName in songDetails) {
+                    if (selectedSongs.has(songName)) {
+                        var artist = songDetails[songName].Artist;
+                        var album = songDetails[songName].Album;
+                        var checkboxId = 'select_' + songName;
+                        selectedSongsHtml += '<li>';
+                        selectedSongsHtml += '<label for="' + '"> # ' + songName + ' - ' + artist + ' (album: ' + album + ')</label>';
+                        selectedSongsHtml += '</li>';
+                    }
+                }
+
+                $('#selected_songs_list').html(selectedSongsHtml);
+                localStorage.setItem('selectedSongs', JSON.stringify(selectedSongsDataSet));
+            }
+
+            updateSelectedSongsList();
+
+            function logSelectedSongs() {
+                console.log(selectedSongsDataSet);
+            }
+
+            $('#selected_songs_list').on('click', 'li', function() {
+                var songName = $(this).text().split(' - ')[0];
+                selectedSongs.delete(songName);
+                updateSelectedSongsList();
+            });
+
+            $('#search_results').on('change', 'input[type="checkbox"]', function() {
+                var songName = $(this).data('song-name');
+                if ($(this).is(':checked')) {
+                    selectedSongs.add(songName);
+                } else {
+                    selectedSongs.delete(songName);
+                }
+                updateSelectedSongsList();
+                logSelectedSongs();
+            });
+
+            function getSongDetailsByName(songName) {
+                for (var i = 0; i < searchResults.length; i++) {
+                    if (searchResults[i].Name === songName) {
+                        return searchResults[i];
+                    }
+                }
+                return null;
+            }
+
+            $('#sendSelectedSongs').click(function() {
+                $('#recommendation_div').removeClass('hidden');
+                $('#rate_div').removeClass('hidden');
+                console.log(selectedSongsDataSet);
+            });
+
+            $('#rate_div').submit(function(event) {
+                event.preventDefault();
+                var rating = $('#rating').val();
+                var comment = $('#comment').val();
+                $.post('/send_rating', { rating: rating, comment: comment }, function(data) {
+                    console.log(data);
+                });
+            });
+        });
+    </script>
+</body>
+</html>

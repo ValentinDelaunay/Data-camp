@@ -1,6 +1,0 @@
-flask
-pandas
-numpy
-re
-nltk
-string

@@ -9,7 +9,7 @@ import re
 app = Flask(__name__)
 
 #clean des données
-df = pd.read_csv('songs.csv')
+df = pd.read_csv('Data-camp\songs.csv')
 df['Lyrics'] = df['Lyrics'].str.replace(r'.*Lyrics', 'Lyrics', regex=True)
 mots_cles = ["Chorus", "Verse", "Pre-Chorus", "Bridge"]
 masques = [df['Lyrics'].str.contains(mot) for mot in mots_cles]

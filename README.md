@@ -12,7 +12,7 @@ Our music recommendation system project revolves around the use of a database of
 
 
 ## I] Use and installation
-Unfortunately, we were unable to deploy our site on Internet. Basically, we decided to use Azure Web Services and tried to deploy under the domain: https://spotifine-dc.azurewebsites.net/. Everything works (deployment under domain name, good parameters, ...) but the content of our files does not appear:
+Unfortunately, we were unable to deploy our site on Internet. Basically, we decided to use Azure Web Services and tried to deploy under the domain: https://spotifine.azurewebsites.net. Everything works (deployment under domain name, good parameters, ...) but the content of our files does not appear:
 
 ![image](https://github.com/ValentinDelaunay/Data-camp/assets/94597623/131e47ee-9bc0-45c4-8f5b-13ff0b63956e)
 

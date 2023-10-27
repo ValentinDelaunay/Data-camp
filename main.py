@@ -11,6 +11,7 @@ from sklearn.metrics.pairwise import cosine_similarity
 from textblob import TextBlob
 import random
 import json
+import collection
 nltk.download('punkt')
 
 app = Flask(__name__)
@@ -111,6 +112,31 @@ def recommend_songs_from_input(user_selections, df, num_recommendations=3):
                 recommended_songs.extend(random.sample(potential_recs, min(num_recommendations - len(recommended_songs), len(potential_recs))))
     recommended_songs = list({song: df[df['Name'] == song].iloc[0].to_dict() for song in recommended_songs}.values())
     return recommended_songs[:num_recommendations]
+
+def get_top10_words(words_list):
+    return [word for word, _ in collections.Counter(words_list).most_common(10)]
+
+general_themes_keywords = {
+    "joie": get_top10_words(["happy", "smile", "joy", "fun", "laugh", "love", "bright", "light", "pleasure", "celebrate"]),
+    "amour": get_top10_words(["love", "heart", "dear", "kiss", "romance", "passion", "hug", "sweet", "darling", "affection"]),
+    "tristesse": get_top10_words(["sad", "tears", "cry", "miss", "grief", "sorrow", "heartbreak", "lonely", "hurt", "pain"]),
+    "rupture": get_top10_words(["break", "apart", "end", "goodbye", "leave", "hurt", "alone", "pain", "gone", "split"]),
+    "colère": get_top10_words(["anger", "rage", "fury", "irritate", "frustrate", "mad", "irate", "enraged", "furious", "incensed"]),
+    "espoir": get_top10_words(["hope", "optimism", "wish", "desire", "expectation", "aspiration", "faith", "confidence", "trust", "anticipation"]),
+    "peur": get_top10_words(["fear", "scared", "afraid", "terror", "horror", "panic", "dread", "fright", "alarm", "anxiety"]),
+    "jalousie": get_top10_words(["jealousy", "envy", "covet", "resent", "begrudge", "green-eyed", "possessive", "suspicion", "invidious", "envious"]),
+    "solitude": get_top10_words(["lonely", "alone", "isolate", "solitude", "desolate", "forlorn", "lonesome", "deserted", "abandoned", "reclusive"]),
+    "nostalgie": get_top10_words(["nostalgia", "reminisce", "memory", "longing", "homesick", "yearning", "reminiscence", "recollection", "wistful", "sentimental"])
+}
+
+def assign_general_theme(song_lyrics):
+    theme_scores = {}
+    for theme, keywords in general_themes_keywords.items():
+        theme_scores[theme] = sum([song_lyrics.count(word) for word in keywords])
+    max_theme = max(theme_scores, key=theme_scores.get)
+    if theme_scores[max_theme] == 0:
+        return "aucun"
+    return max_theme
 
 @app.route('/store_user_selection', methods=['POST'])
 def store_user_selection():

@@ -64,4 +64,4 @@ jobs:
         with:
           app-name: 'spotifine'
           slot-name: 'Production'
-          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_6D2AAFE029F64BC1BBE9334C98955CA2 }}
+          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_AD945B9FE12542098BF281F0A1E9F607 }}

@@ -11,7 +11,7 @@ from sklearn.metrics.pairwise import cosine_similarity
 from textblob import TextBlob
 import random
 import json
-import collection
+import collections
 nltk.download('punkt')
 
 app = Flask(__name__)

@@ -1,6 +1,6 @@
 <html>
 <head>
-    <title>Recherche de chansons</title>
+    <title>Spotifine</title>
     <style>
         header {
             background-color: #333;
@@ -394,18 +394,25 @@
             });
 
             function getSongDetailsByName(songName) {
-                for (var i = 0; i < searchResults.length; i++) {
-                    if (searchResults[i].Name === songName) {
-                        return searchResults[i];
-                    }
-                }
-                return null;
+              for (var i = 0; i < searchResults.length; i++) {
+                  if (searchResults[i].Name === songName) {
+                      return searchResults[i];
+                  }
+              }
+              return null;
             }
 
             $('#sendSelectedSongs').click(function() {
-                $('#recommendation_div').removeClass('hidden');
-                $('#rate_div').removeClass('hidden');
-                console.log(selectedSongsDataSet);
+              if (selectedSongs.size === 0) {
+                  alert('Please select at least one song before sending.');
+                  return;
+              }
+              var userSelection = JSON.stringify(selectedSongsDataSet);
+                $.post('/store_user_selection', { user_selection: userSelection }, function(data) {
+                    console.log(data);
+                });
+              $('#recommendation_div').removeClass('hidden');
+              $('#rate_div').removeClass('hidden');
             });
 
             $('#rate_div').submit(function(event) {
